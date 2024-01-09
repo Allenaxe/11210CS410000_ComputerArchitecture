@@ -1,8 +1,8 @@
 #include <iostream>
+#include <algorithm>
 #include <fstream>
 #include <vector>
 #include <bitset>
-#include <regex>
 #include <cmath>
 #include <set>
 
@@ -35,20 +35,23 @@ int main(int argc, char *argv[]){
     /* Read Reference*/
 
     string header, tail;
-    
+
+    bool headerflag = true;
+
     vector <string> reference_data;
     vector <string> testcases;
 
     while(getline(reference, str)) {
-        if(regex_search(str, regex(".benchmark"))) {
+        if(isalnum(str[0]))
+            reference_data.push_back(str);
+        else if(headerflag) {
             header = str;
-            continue;
+            headerflag = false;
         }
-        if(regex_search(str, regex(".end"))) {
+        else {
             tail = str;
             break;
         }
-        reference_data.push_back(str);
     }
     
     int offset = log2(block_size);
@@ -74,7 +77,7 @@ int main(int argc, char *argv[]){
         }
         Q[i].first = min(Z, O);
         Q[i].second = max(Z, O);
-    } 
+    }
 
     for(int i = 0; i < block; ++i) {
         for(int j = i + 1; j < block; ++j) {
@@ -89,7 +92,7 @@ int main(int argc, char *argv[]){
             C[j][i].second = max(E, D);
         }
     }
-    
+
     vector <bool> indexbit(block, false);
     vector <bool> s(block, true);
 
@@ -117,6 +120,7 @@ int main(int argc, char *argv[]){
 
     for(int t = 0; t < testcases.size(); ++t) {
         string indexstr, tagstr;
+
         for(int i = 0; i < block; ++i) {
             if(indexbit[i]) indexstr += testcases[t][i];
             else tagstr += testcases[t][i];
@@ -142,7 +146,7 @@ int main(int argc, char *argv[]){
         miss_count++;
 
         for(auto &a : cache[index]) {
-            if(a & 1) { a = tag; replace = true; break;}
+            if(a & 1) { a = tag; replace = true; break; }
         }
 
         if(replace) continue;;
