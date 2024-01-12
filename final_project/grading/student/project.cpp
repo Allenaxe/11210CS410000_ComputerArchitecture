@@ -61,7 +61,6 @@ int main(int argc, char *argv[]){
 
     for(auto data : reference_data) {
         string s = data.substr(0, block);
-        //s = data.substr(block, data.size()) + s;
         reverse(s.begin(), s.end());
         testcases.push_back(s);
     }
@@ -129,12 +128,6 @@ int main(int argc, char *argv[]){
         ll index = stoull(indexstr, nullptr, 2);
         ll tag = stoull(tagstr, nullptr, 2);
         
-        if(t < 10){
-
-        cout << tag << '\n';
-
-        cout << "Id: " << t + 1 << ' ' << "Index: " << indexstr << ' ' << "Tag: " << tagstr << '\n';
-        }
         tag = tag << 1;
 
         bool hit = false, replace = false;
