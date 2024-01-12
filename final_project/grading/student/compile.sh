@@ -1,1 +1,1 @@
-./project ../testcases/config/cache2.org ../testcases/bench/reference2.lst ./index.rpt
+./project ../testcases_2/config/cacheA.org ../testcases_2/bench/DataReference_n_real.lst ./index.rpt

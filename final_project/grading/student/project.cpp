@@ -6,9 +6,8 @@
 #include <cmath>
 #include <set>
 
-#define MAX_LENGTH 100
-
 using namespace std;
+using ll = long long;
 
 int main(int argc, char *argv[]){
 
@@ -60,8 +59,9 @@ int main(int argc, char *argv[]){
 
     int indexLen = log2(cache_sets);
 
-    for(int i = 0; i < reference_data.size(); ++i) {
-        string s = reference_data[i].substr(0, block);
+    for(auto data : reference_data) {
+        string s = data.substr(0, block);
+        //s = data.substr(block, data.size()) + s;
         reverse(s.begin(), s.end());
         testcases.push_back(s);
     }
@@ -113,30 +113,34 @@ int main(int argc, char *argv[]){
         indexbit[best] = true;
     }
 
-    vector < vector <int> > cache(cache_sets, vector <int> (associativity, (1 << block) | 1));
+    vector < vector <ll> > cache(cache_sets, vector <ll> (associativity, (1LL << block) | 1));
     vector <bool> answer(testcases.size(), false);
 
-    int mask = (1 << block) - 2, miss_count = 0;
+    ll mask = (1LL << block) - 2, miss_count = 0;
 
     for(int t = 0; t < testcases.size(); ++t) {
         string indexstr, tagstr;
 
-        for(int i = 0; i < block; ++i) {
+        for(int i = 0; i < testcases[t].size(); ++i) {
             if(indexbit[i]) indexstr += testcases[t][i];
             else tagstr += testcases[t][i];
         }
 
-        int index = stoi(indexstr, nullptr, 2);
-        int tag = stoi(tagstr, nullptr, 2);
+        ll index = stoull(indexstr, nullptr, 2);
+        ll tag = stoull(tagstr, nullptr, 2);
+        
+        if(t < 10){
 
-        cout << "Index: " << indexstr << ' ' << "Tag: " << tagstr << '\n';
+        cout << tag << '\n';
 
+        cout << "Id: " << t + 1 << ' ' << "Index: " << indexstr << ' ' << "Tag: " << tagstr << '\n';
+        }
         tag = tag << 1;
 
         bool hit = false, replace = false;
 
-        for(auto a : cache[index]) {
-            if(a == tag) { hit = true; break; }
+        for(auto &a : cache[index]) {
+            if((a >> 1) == (tag >> 1)) { a &= mask; hit = true; break; }
         }
 
         answer[t] = hit;
@@ -149,10 +153,10 @@ int main(int argc, char *argv[]){
             if(a & 1) { a = tag; replace = true; break; }
         }
 
-        if(replace) continue;;
+        if(replace) continue;
 
         for(auto &a : cache[index]) {
-            a &= mask;
+            a |= 1;
         }
 
         cache[index][0] = tag;

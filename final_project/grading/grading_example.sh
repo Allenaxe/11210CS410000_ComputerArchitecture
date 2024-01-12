@@ -1,14 +1,14 @@
 #! /bin/bash
 
-configPool="cache1 cache2"
-benchPool="reference1 reference2"
+configPool="cacheA cacheB cacheC cacheD cacheE cacheF"
+benchPool="DataReference_n_comp DataReference_n_real DataReference_real_up InstReference_iir_one InstReference_lms InstReference_matrix InstReference_n_comp randcase1"
 timeLimit=60
 
 root=$( pwd )
 outputDir=$root/output
 studentDir=$root/student
-benchDir=$root/testcases/bench
-configDir=$root/testcases/config
+benchDir=$root/testcases_2/bench
+configDir=$root/testcases_2/config
 verifyBin=$root/verifier/verify
 chmod 744 $verifyBin
 
@@ -29,7 +29,9 @@ function verifyCmd ()
 {
 	local argv="$configDir/$1.org $benchDir/$2.lst $outputDir/index.rpt"
 	local log=$( $verifyBin $argv | cat )
-    
+	
+	printf "%s\n" $log
+    	
 	if [[ $log =~ "Congratulations!!" ]]; then
 		echo "Success"
 	else
